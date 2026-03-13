@@ -1,6 +1,7 @@
 [
   {
     "doctype": "LSERP Brand Theme",
+    "name": "Enumoo",
     "theme_name": "Enumoo",
     "description": "Official Enumoo brand — Teal and Dark Navy",
     "is_predefined": 1,
@@ -18,6 +19,7 @@
   },
   {
     "doctype": "LSERP Brand Theme",
+    "name": "Enumoo Compact",
     "theme_name": "Enumoo Compact",
     "description": "Enumoo brand in SAP Fiori compact style — maximum information density",
     "is_predefined": 1,
@@ -35,6 +37,7 @@
   },
   {
     "doctype": "LSERP Brand Theme",
+    "name": "LEAPSYS",
     "theme_name": "LEAPSYS",
     "description": "Official LEAPSYS brand — Signature Red",
     "is_predefined": 1,
@@ -52,6 +55,7 @@
   },
   {
     "doctype": "LSERP Brand Theme",
+    "name": "LEAPSYS Compact",
     "theme_name": "LEAPSYS Compact",
     "description": "LEAPSYS brand in SAP Fiori compact style",
     "is_predefined": 1,
@@ -69,6 +73,7 @@
   },
   {
     "doctype": "LSERP Brand Theme",
+    "name": "Standard Light",
     "theme_name": "Standard Light",
     "description": "Clean standard light theme",
     "is_predefined": 1,
