@@ -620,6 +620,40 @@ html, body, input, button, select, textarea,
 ::-webkit-scrollbar-thumb:hover {{ background: {p}; }}
 """
 
+    brand_name = theme.brand_name or "LEAPSYS"
+    brand_logo = theme.brand_logo or ""
+    
+    # Unbreakable CSS App Switcher Overrides
+    css += f"""
+/* ── Sidebar App Switcher Branding Override ── */
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-brand-text {{
+    font-size: 0 !important;
+    visibility: hidden !important;
+}}
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-brand-text::after {{
+    content: "{brand_name}" !important;
+    visibility: visible !important;
+    display: block;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: {p} !important;
+    text-transform: uppercase !important;
+}}
+"""
+    if brand_logo:
+        css += f"""
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-item-icon svg {{
+    display: none !important;
+}}
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-item-icon {{
+    background-image: url('{brand_logo}') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}}
+"""
 
     # Append any custom CSS from the theme record
     if theme.custom_css:
