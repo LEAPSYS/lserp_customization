@@ -34,15 +34,16 @@ lserp_customization.theme.apply_branding = function() {
             // Periodically check and replace UI text since Frappe renders dynamically
             setInterval(function() {
                 // Change Navbar Brand
-                $('.navbar-brand .app-logo').text(brand_name);
-                $('.app-logo-text').text(brand_name);
+                $('.navbar-brand .app-logo, .navbar-brand .app-logo-text, .app-logo-text').text(brand_name);
+                // Try grabbing elements with title=ERPNext
+                $('[title="ERPNext"]').attr('title', brand_name);
             }, 500);
         }
 
         if (brand_logo) {
             frappe.boot.app_logo_url = brand_logo;
             setInterval(function() {
-                $('.navbar-brand img, .app-logo img').attr('src', brand_logo);
+                $('.navbar-brand img, .app-logo img, .navbar-brand .app-logo-url img').attr('src', brand_logo);
             }, 500);
         }
     }
