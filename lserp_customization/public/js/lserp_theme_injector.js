@@ -2,6 +2,7 @@ frappe.provide('lserp_customization.theme');
 
 $(document).ready(function() {
     lserp_customization.theme.apply_theme();
+    lserp_customization.theme.apply_branding();
 });
 
 lserp_customization.theme.apply_theme = function() {
@@ -18,4 +19,31 @@ lserp_customization.theme.apply_theme = function() {
             }
         }
     });
+};
+
+lserp_customization.theme.apply_branding = function() {
+    if (frappe.boot && frappe.boot.lserp_theme) {
+        let brand_name = frappe.boot.lserp_theme.brand_name;
+        let brand_logo = frappe.boot.lserp_theme.brand_logo;
+
+        if (brand_name) {
+            // Change standard app names
+            frappe.boot.app_name = brand_name;
+            document.title = brand_name;
+            
+            // Periodically check and replace UI text since Frappe renders dynamically
+            setInterval(function() {
+                // Change Navbar Brand
+                $('.navbar-brand .app-logo').text(brand_name);
+                $('.app-logo-text').text(brand_name);
+            }, 500);
+        }
+
+        if (brand_logo) {
+            frappe.boot.app_logo_url = brand_logo;
+            setInterval(function() {
+                $('.navbar-brand img, .app-logo img').attr('src', brand_logo);
+            }, 500);
+        }
+    }
 };

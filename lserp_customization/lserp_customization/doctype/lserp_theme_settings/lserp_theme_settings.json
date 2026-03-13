@@ -9,6 +9,7 @@
   "active_theme",
   "website_url",
   "generate_theme",
+  "brand_name",
   "brand_logo",
   "colors_section",
   "primary_color",
@@ -41,6 +42,12 @@
    "fieldname": "generate_theme",
    "fieldtype": "Button",
    "label": "Extract Colors from URL"
+  },
+  {
+   "fieldname": "brand_name",
+   "fieldtype": "Data",
+   "label": "Brand Name",
+   "description": "Overrides 'ERPNext' text in the UI"
   },
   {
    "fieldname": "brand_logo",
