@@ -1,111 +1,58 @@
 {
  "actions": [],
- "allow_rename": 1,
- "creation": "2024-03-13 12:00:00.000000",
+ "creation": "2024-03-14 00:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "general_section",
   "active_theme",
-  "website_url",
-  "generate_theme",
-  "brand_name",
-  "brand_logo",
-  "enable_modern_dashboard",
-  "font_family",
-  "colors_section",
-  "primary_color",
-  "secondary_color",
-  "background_color",
-  "text_color",
-  "sidebar_background"
+  "theme_preview_section",
+  "preview_primary",
+  "preview_secondary",
+  "preview_bg"
  ],
  "fields": [
   {
-   "fieldname": "general_section",
-   "fieldtype": "Section Break",
-   "label": "General"
-  },
-  {
-   "default": "Standard",
    "fieldname": "active_theme",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "label": "Active Theme",
-   "options": "Standard\nLS Theme\nEnummo Theme\nCustom\nURL Extractor"
+   "options": "LSERP Brand Theme",
+   "description": "Select the theme to apply across the entire site"
   },
   {
-   "depends_on": "eval:doc.active_theme=='URL Extractor'",
-   "fieldname": "website_url",
-   "fieldtype": "Data",
-   "label": "Website URL"
-  },
-  {
-   "depends_on": "eval:doc.active_theme=='URL Extractor'",
-   "fieldname": "generate_theme",
-   "fieldtype": "Button",
-   "label": "Extract Colors from URL"
-  },
-  {
-   "fieldname": "brand_name",
-   "fieldtype": "Data",
-   "label": "Brand Name",
-   "description": "Overrides 'ERPNext' text in the UI"
-  },
-  {
-   "fieldname": "brand_logo",
-   "fieldtype": "Attach Image",
-   "label": "Brand Logo"
-  },
-  {
-   "fieldname": "enable_modern_dashboard",
-   "fieldtype": "Check",
-   "label": "Enable Modern Dashboard UI",
-   "description": "Applies glassmorphism styling, drop shadows, and rounded corners to the Workspace dashboard"
-  },
-  {
-   "depends_on": "eval:doc.enable_modern_dashboard==1",
-   "fieldname": "font_family",
-   "fieldtype": "Select",
-   "label": "Font Family",
-   "options": "Inter\nOutfit\nRoboto\nDM Sans",
-   "default": "Inter",
-   "description": "Primary font used across the entire UI"
-  },
-  {
-   "fieldname": "colors_section",
+   "fieldname": "theme_preview_section",
    "fieldtype": "Section Break",
-   "label": "Theme Colors"
+   "label": "Active Theme Preview",
+   "depends_on": "eval:doc.active_theme"
   },
   {
-   "fieldname": "primary_color",
+   "fieldname": "preview_primary",
    "fieldtype": "Color",
-   "label": "Primary Color"
+   "label": "Primary Color",
+   "read_only": 1,
+   "fetch_from": "active_theme.primary_color",
+   "fetch_if_empty": 0
   },
   {
-   "fieldname": "secondary_color",
+   "fieldname": "preview_secondary",
    "fieldtype": "Color",
-   "label": "Secondary Color"
+   "label": "Secondary Color",
+   "read_only": 1,
+   "fetch_from": "active_theme.secondary_color",
+   "fetch_if_empty": 0
   },
   {
-   "fieldname": "background_color",
+   "fieldname": "preview_bg",
    "fieldtype": "Color",
-   "label": "Background Color"
-  },
-  {
-   "fieldname": "text_color",
-   "fieldtype": "Color",
-   "label": "Text Color"
-  },
-  {
-   "fieldname": "sidebar_background",
-   "fieldtype": "Color",
-   "label": "Sidebar Background"
+   "label": "Background Color",
+   "read_only": 1,
+   "fetch_from": "active_theme.background_color",
+   "fetch_if_empty": 0
   }
  ],
- "index_web_pages_for_search": 1,
+ "index_web_pages_for_search": 0,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-13 12:00:00.000000",
+ "modified": "2024-03-14 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "LSERP Customization",
  "name": "LSERP Theme Settings",

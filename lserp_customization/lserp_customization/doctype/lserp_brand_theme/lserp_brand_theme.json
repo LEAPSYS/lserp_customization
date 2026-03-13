@@ -1,0 +1,161 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:theme_name",
+ "creation": "2024-03-14 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "theme_name",
+  "description",
+  "is_predefined",
+  "branding_section",
+  "brand_name",
+  "brand_logo",
+  "ui_section",
+  "enable_modern_dashboard",
+  "font_family",
+  "colors_section",
+  "primary_color",
+  "secondary_color",
+  "column_break_1",
+  "background_color",
+  "text_color",
+  "sidebar_background",
+  "custom_css_section",
+  "custom_css"
+ ],
+ "fields": [
+  {
+   "fieldname": "theme_name",
+   "fieldtype": "Data",
+   "label": "Theme Name",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description",
+   "in_list_view": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_predefined",
+   "fieldtype": "Check",
+   "label": "Is Predefined (Built-in)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "branding_section",
+   "fieldtype": "Section Break",
+   "label": "Branding"
+  },
+  {
+   "fieldname": "brand_name",
+   "fieldtype": "Data",
+   "label": "Brand Name",
+   "description": "Replaces ERPNext / Frappe text in the UI"
+  },
+  {
+   "fieldname": "brand_logo",
+   "fieldtype": "Attach Image",
+   "label": "Brand Logo"
+  },
+  {
+   "fieldname": "ui_section",
+   "fieldtype": "Section Break",
+   "label": "UI Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_modern_dashboard",
+   "fieldtype": "Check",
+   "label": "Enable Modern Dashboard UI",
+   "description": "Glassmorphism cards, shadows, hover animations"
+  },
+  {
+   "depends_on": "eval:doc.enable_modern_dashboard == 1",
+   "default": "Inter",
+   "fieldname": "font_family",
+   "fieldtype": "Select",
+   "label": "Font Family",
+   "options": "Inter\nOutfit\nRoboto\nDM Sans"
+  },
+  {
+   "fieldname": "colors_section",
+   "fieldtype": "Section Break",
+   "label": "Colors"
+  },
+  {
+   "fieldname": "primary_color",
+   "fieldtype": "Color",
+   "label": "Primary Color"
+  },
+  {
+   "fieldname": "secondary_color",
+   "fieldtype": "Color",
+   "label": "Secondary Color"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "background_color",
+   "fieldtype": "Color",
+   "label": "Background Color"
+  },
+  {
+   "fieldname": "text_color",
+   "fieldtype": "Color",
+   "label": "Body Text Color"
+  },
+  {
+   "fieldname": "sidebar_background",
+   "fieldtype": "Color",
+   "label": "Sidebar Background"
+  },
+  {
+   "fieldname": "custom_css_section",
+   "fieldtype": "Section Break",
+   "label": "Custom CSS Overrides"
+  },
+  {
+   "fieldname": "custom_css",
+   "fieldtype": "Code",
+   "label": "Custom CSS",
+   "options": "CSS",
+   "description": "Appended after all auto-generated CSS. Use this for fine-grained tweaks."
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 0,
+ "links": [],
+ "modified": "2024-03-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "LSERP Customization",
+ "name": "LSERP Brand Theme",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "All"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "theme_name",
+ "track_changes": 1
+}
