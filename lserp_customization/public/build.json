@@ -1,5 +1,5 @@
 {
-    "js/lserp_theme_injector.js": [
-        "public/js/lserp_theme_injector.js"
+    "js/lserp_theme_injector.bundle.js": [
+        "public/js/lserp_theme_injector.bundle.js"
     ]
 }
