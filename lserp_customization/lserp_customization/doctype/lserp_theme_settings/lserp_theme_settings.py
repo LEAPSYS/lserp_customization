@@ -49,6 +49,8 @@ class LSERPThemeSettings(Document):
             frappe.throw(f"Error fetching URL: {str(e)}")
 
     def validate(self):
+        self.apply_whitelabel_settings()
+        
         if self.active_theme == "LS Theme":
             self.primary_color = "#E1251B" # Example LEAPSYS Red
             self.secondary_color = "#1D1D1B"
@@ -61,3 +63,36 @@ class LSERPThemeSettings(Document):
             self.text_color = "#212529"
             self.background_color = "#F8F9FA"
             self.sidebar_background = "#0047AB"
+            
+    def apply_whitelabel_settings(self):
+        """Update core ERPNext/Frappe settings to enforce the whitelabel branding"""
+        try:
+            # 1. Update App Name in System Settings
+            if self.brand_name:
+                system_settings = frappe.get_doc("System Settings", "System Settings")
+                if system_settings.app_name != self.brand_name:
+                    system_settings.app_name = self.brand_name
+                    system_settings.save(ignore_permissions=True)
+            
+            # 2. Update Logos in Navbar and Website Settings
+            if self.brand_logo:
+                navbar_settings = frappe.get_doc("Navbar Settings", "Navbar Settings")
+                if navbar_settings.app_logo != self.brand_logo:
+                    navbar_settings.app_logo = self.brand_logo
+                    navbar_settings.save(ignore_permissions=True)
+                    
+                website_settings = frappe.get_doc("Website Settings", "Website Settings")
+                if website_settings.app_logo != self.brand_logo or website_settings.splash_image != self.brand_logo:
+                    website_settings.app_logo = self.brand_logo
+                    website_settings.splash_image = self.brand_logo
+                    website_settings.save(ignore_permissions=True)
+                    
+                # Update site_config for early loading
+                from frappe.installer import update_site_config
+                update_site_config("app_logo_url", self.brand_logo)
+                
+            # Clear cache so settings take effect immediately
+            frappe.clear_cache()
+            
+        except Exception as e:
+            frappe.log_error(f"Error applying whitelabel settings: {str(e)}", "LSERP Theme Whitelabel")
