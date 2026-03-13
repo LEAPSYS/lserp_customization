@@ -100,9 +100,11 @@ html, body, input, button, select, textarea,
     --dark-border-color:  #ced4da;
     --table-border-color: #e2e6ea;
 
-    /* text */
-    --text-color:         {tx};
+    /* text – keep Frappe's default for most text to avoid bleed on dark bg areas.
+       We apply explicit text colors per component below instead. */
+    --text-color:         #1a1f36;
     --text-muted:         #6c757d;
+    --body-color:         #1a1f36;
 
     /* focus ring */
     --highlight-shadow:   1px 1px 10px {p}33, 0px 0px 4px {p};
@@ -191,6 +193,11 @@ html, body, input, button, select, textarea,
 .page-content,
 body {{
     background-color: {bg} !important;
+}}
+/* Body text — only on light-background page content areas */
+.page-container, .main-section, .layout-main, .desk-body, .page-content,
+.frappe-card, .form-page, .list-row, .report-summary-wrapper {{
+    color: #1a1f36 !important;
 }}
 
 /* ================================================================
@@ -405,10 +412,14 @@ body {{
    ================================================================ */
 .indicator-pill {{ border-radius: 20px !important; font-weight: 500 !important; }}
 
-/* ================================================================
-   14. INDICATOR / LINK COLOURS
-   ================================================================ */
-a, .help-box a {{ color: {p} !important; }}
+/* 14. Links — scoped to light-bg areas only (NOT globally to avoid clashing with dark navbar/sidebar) */
+.page-container a:not(.btn):not(.nav-link),
+.list-row a,
+.breadcrumb-item a,
+.form-page a:not(.btn),
+.frappe-card a:not(.btn),
+.widget a:not(.btn),
+.help-box a {{ color: {p} !important; }}
 
 /* ================================================================
    15. REPORT CONTAINER
