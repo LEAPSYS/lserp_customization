@@ -7,7 +7,11 @@ def extend_bootinfo(bootinfo):
 
     theme = frappe.get_doc("LSERP Theme Settings", "LSERP Theme Settings")
     bootinfo.lserp_theme = {
-        "brand_name": theme.brand_name or "",
-        "brand_logo": theme.brand_logo or "",
-        "active_theme": theme.active_theme or "Standard"
+        "brand_name":              theme.brand_name or "",
+        "brand_logo":              theme.brand_logo or "",
+        "active_theme":            theme.active_theme or "Standard",
+        "enable_modern_dashboard": bool(theme.enable_modern_dashboard),
+        "font_family":             theme.font_family or "Inter",
+        "primary_color":           theme.primary_color or "",
+        "secondary_color":         theme.secondary_color or "",
     }

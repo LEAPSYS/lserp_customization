@@ -11,6 +11,8 @@
   "generate_theme",
   "brand_name",
   "brand_logo",
+  "enable_modern_dashboard",
+  "font_family",
   "colors_section",
   "primary_color",
   "secondary_color",
@@ -53,6 +55,21 @@
    "fieldname": "brand_logo",
    "fieldtype": "Attach Image",
    "label": "Brand Logo"
+  },
+  {
+   "fieldname": "enable_modern_dashboard",
+   "fieldtype": "Check",
+   "label": "Enable Modern Dashboard UI",
+   "description": "Applies glassmorphism styling, drop shadows, and rounded corners to the Workspace dashboard"
+  },
+  {
+   "depends_on": "eval:doc.enable_modern_dashboard==1",
+   "fieldname": "font_family",
+   "fieldtype": "Select",
+   "label": "Font Family",
+   "options": "Inter\nOutfit\nRoboto\nDM Sans",
+   "default": "Inter",
+   "description": "Primary font used across the entire UI"
   },
   {
    "fieldname": "colors_section",
