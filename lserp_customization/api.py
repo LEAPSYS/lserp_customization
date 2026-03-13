@@ -6,23 +6,24 @@ import frappe
 # ──────────────────────────────────────────────────────────────────────────────
 @frappe.whitelist(allow_guest=True)
 def get_theme_css():
-    """Dynamically generates CSS for ALL internal Frappe pages based on LSERP Theme Settings."""
+    """Override Frappe's native CSS variable system + all internal pages."""
     if not frappe.db.exists("LSERP Theme Settings", "LSERP Theme Settings"):
         return ""
 
     theme = frappe.get_doc("LSERP Theme Settings", "LSERP Theme Settings")
 
-    if theme.active_theme == "Standard" and not theme.enable_modern_dashboard:
+    if theme.active_theme == "Standard" and not getattr(theme, "enable_modern_dashboard", 0):
         return ""
 
-    primary   = theme.primary_color   or "#078586"
-    secondary = theme.secondary_color or "#282f3b"
-    bg        = theme.background_color or "#f0f3f9"
-    text      = theme.text_color      or "#1a1a2e"
-    sidebar   = theme.sidebar_background or "#1f2530"
-    modern    = bool(theme.enable_modern_dashboard)
+    p  = theme.primary_color   or "#078586"   # Primary brand teal
+    s  = theme.secondary_color or "#282f3b"   # Dark navy
+    bg = theme.background_color or "#f0f3f9"  # Page bg
+    tx = theme.text_color       or "#282f3b"
+    sb = theme.sidebar_background or "#1f2530"
 
-    font = getattr(theme, "font_family", "Inter") or "Inter"
+    modern = bool(getattr(theme, "enable_modern_dashboard", 0))
+    font   = getattr(theme, "font_family", "Inter") or "Inter"
+
     font_url_map = {
         "Inter":   "Inter:wght@300;400;500;600;700",
         "Outfit":  "Outfit:wght@300;400;500;600;700",
@@ -31,356 +32,409 @@ def get_theme_css():
     }
     font_url = font_url_map.get(font, font_url_map["Inter"])
 
-    # Primary lighter shade for hover / highlights (simple darken trick via opacity)
-    primary_alpha = primary + "22"   # 13 % opacity overlay
+    r = "12px" if modern else "6px"      # border-radius token
+    r_sm = "8px" if modern else "4px"
+    r_lg = "16px" if modern else "8px"
 
     css = f"""
 /* ================================================================
-   LSERP Theme  — generated for all internal Frappe/ERPNext pages
-   Theme: {theme.active_theme}  |  Modern: {modern}
+   LSERP Theme Override  –  All Internal Pages
    ================================================================ */
 
-/* ---------- 0. Custom font ---------- */
+/* ── 0. Font ─────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family={font_url}&display=swap');
 
-html, body, .frappe-app,
-input, textarea, select, button,
-.form-control, .frappe-control {{ font-family: '{font}', sans-serif !important; }}
-
-/* ---------- 1. CSS variables ---------- */
-:root {{
-    --lserp-primary:    {primary};
-    --lserp-secondary:  {secondary};
-    --lserp-bg:         {bg};
-    --lserp-text:       {text};
-    --lserp-sidebar:    {sidebar};
+html, body, input, button, select, textarea,
+.form-control, .frappe-control, .btn, .sidebar-item {{
+    font-family: '{font}', sans-serif !important;
 }}
 
 /* ================================================================
-   NAVBAR / TOP BAR
+   1. FRAPPE CSS VARIABLE OVERRIDES  (the critical step)
+      These shadow Frappe's own design tokens so every
+      component that reads them gets our brand colours.
+   ================================================================ */
+:root,
+[data-theme="light"],
+[data-theme="dark"] {{
+
+    /* primary */
+    --primary:            {p};
+    --primary-color:      {p};
+    --brand-color:        {p};
+    --btn-primary:        {p};
+    --progress-bar-bg:    {p};
+
+    /* navbar */
+    --navbar-bg:          {s};
+
+    /* sidebar */
+    --sidebar-select-color: rgba(255,255,255,0.12);
+
+    /* background layers */
+    --bg-color:           {bg};
+    --subtle-accent:      {bg};
+    --subtle-fg:          {bg};
+
+    /* card / fg */
+    --fg-color:           #ffffff;
+    --card-bg:            #ffffff;
+    --modal-bg:           #ffffff;
+    --popover-bg:         #ffffff;
+    --toast-bg:           #ffffff;
+    --awesomebar-focus-bg:#ffffff;
+
+    /* controls */
+    --control-bg:         #f5f7fa;
+    --control-bg-on-gray: #eeeff3;
+    --input-disabled-bg:  #e9ecef;
+
+    /* button */
+    --btn-default-bg:       #f5f7fa;
+    --btn-default-hover-bg: #eaecf0;
+    --btn-ghost-hover-bg:   rgba(0,0,0,0.06);
+
+    /* borders */
+    --border-primary:     {p};
+    --border-color:       #e2e6ea;
+    --dark-border-color:  #ced4da;
+    --table-border-color: #e2e6ea;
+
+    /* text */
+    --text-color:         {tx};
+    --text-muted:         #6c757d;
+
+    /* focus ring */
+    --highlight-shadow:   1px 1px 10px {p}33, 0px 0px 4px {p};
+    --checkbox-gradient:  linear-gradient(180deg, {p} -124.51%, {p} 100%);
+    --checkbox-focus-shadow: 0 0 0 2px {p}44;
+
+    /* scrollbar */
+    --scrollbar-thumb-color: {p}88;
+    --scrollbar-track-color: {bg};
+
+    /* shadows */
+    --card-shadow:  0 2px 8px rgba(0,0,0,0.08);
+    --modal-shadow: 0 12px 40px rgba(0,0,0,0.18);
+}}
+
+/* ================================================================
+   2. NAVBAR / TOP BAR
    ================================================================ */
 .navbar,
-.page-header,
 .desk-navbar {{
-    background: linear-gradient(135deg, {secondary} 0%, {primary} 100%) !important;
+    background: linear-gradient(135deg, {s} 0%, {p} 100%) !important;
     border-bottom: none !important;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.18) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.20) !important;
 }}
-.navbar .navbar-brand,
-.navbar a,
+.navbar *,
 .navbar .btn,
+.navbar .nav-link,
 .navbar .search-bar input,
 .navbar .form-control,
-.navbar .notifications-icon,
-.navbar .input-group-text,
-.navbar .nav-link {{
-    color: #fff !important;
-}}
-.navbar .search-bar input::placeholder {{
-    color: rgba(255,255,255,0.65) !important;
+.navbar .awesomplete input,
+.navbar-expand .navbar-nav a {{
+    color: rgba(255,255,255,0.92) !important;
 }}
 .navbar .search-bar,
-.navbar .input-group {{
+.navbar .awesomplete {{
     background: rgba(255,255,255,0.15) !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(255,255,255,0.25) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    border-radius: {r_sm} !important;
+}}
+.navbar .search-bar .form-control,
+.navbar .awesomplete input {{
+    background: transparent !important;
+    border: none !important;
 }}
 
 /* ================================================================
-   LEFT SIDEBAR / DESK MENU
+   3. LEFT SIDEBAR
    ================================================================ */
 .layout-side-section,
+.desk-sidebar-wrapper,
 .desk-sidebar,
-.sidebar-column,
-.sidebar,
-.sidebar-menu {{
-    background: {sidebar} !important;
-    border-right: 1px solid rgba(255,255,255,0.06) !important;
+.sidebar-column {{
+    background-color: {sb} !important;
+    border-right: none !important;
 }}
 .sidebar-item,
 .sidebar-item a,
-.desk-sidebar .sidebar-group-title,
-.sidebar-label {{
+.sidebar-label,
+.desk-sidebar .standard-sidebar-item span,
+.sidebar-section-head {{
     color: rgba(255,255,255,0.75) !important;
 }}
-.sidebar-item:hover,
-.standard-sidebar-item:hover {{
-    background: rgba(255,255,255,0.08) !important;
-    color: #fff !important;
-    border-left: 3px solid {primary} !important;
+.standard-sidebar-item:hover,
+.sidebar-item:hover {{
+    background: rgba(255,255,255,0.10) !important;
+    border-left: 3px solid {p} !important;
 }}
 .standard-sidebar-item.selected,
 .sidebar-item.active {{
-    background: rgba(255,255,255,0.14) !important;
-    color: #fff !important;
-    border-left: 3px solid {primary} !important;
+    background: rgba(255,255,255,0.16) !important;
+    border-left: 3px solid {p} !important;
     font-weight: 600 !important;
+}}
+.standard-sidebar-item.selected span,
+.sidebar-item.active a {{
+    color: #fff !important;
 }}
 
 /* ================================================================
-   PAGE CONTENT BACKGROUND
+   4. PAGE / BODY BACKGROUND
    ================================================================ */
 .page-container,
 .main-section,
 .layout-main,
 .desk-body,
-.page-content {{
-    background: {bg} !important;
+.page-content,
+body {{
+    background-color: {bg} !important;
 }}
 
 /* ================================================================
-   FORM VIEWS  (DocType form pages)
+   5. FORM VIEWS
    ================================================================ */
-.form-page,
-.page-form,
 .frappe-doc-section,
-.form-section {{
+.form-section,
+.section-body,
+.page-form,
+.form-page {{
     background: #fff !important;
-    border-radius: {'12px' if modern else '4px'} !important;
+    border-radius: {r} !important;
     border: 1px solid rgba(0,0,0,0.07) !important;
-    box-shadow: {'rgba(100,100,111,0.10) 0px 6px 20px 0px' if modern else 'none'} !important;
-    padding: 16px !important;
-    margin-bottom: 12px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,{'0.07 !important' if modern else '0'}) !important;
+    padding: 14px 16px !important;
+    margin-bottom: 10px !important;
 }}
-
-/* Section heading */
 .section-head,
 .form-section-heading,
 .section-title {{
-    color: {secondary} !important;
-    font-weight: 600 !important;
-    border-bottom: 2px solid {primary}33 !important;
+    color: {s} !important;
+    font-weight: 700 !important;
+    font-size: 0.88rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border-bottom: 2px solid {p}33 !important;
     padding-bottom: 6px !important;
+    margin-bottom: 12px !important;
 }}
-
-/* Field labels */
 .control-label,
-.frappe-control label,
-.label-area {{
-    color: {text} !important;
+.frappe-control label {{
+    color: {tx} !important;
     font-weight: 500 !important;
+    font-size: 0.82rem !important;
 }}
 
-/* Input fields */
+/* Input controls */
 .form-control,
 .frappe-control .form-control,
 .input-with-feedback,
-.ql-container {{
-    border-radius: {'8px' if modern else '4px'} !important;
+.like-disabled-input {{
     border: 1.5px solid #dde2e8 !important;
-    background: #fafbfc !important;
-    color: {text} !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    border-radius: {r_sm} !important;
+    background: #f9fafb !important;
+    color: {tx} !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
 }}
 .form-control:focus,
 .frappe-control .form-control:focus {{
-    border-color: {primary} !important;
-    box-shadow: 0 0 0 3px {primary_alpha} !important;
+    border-color: {p} !important;
+    box-shadow: 0 0 0 3px {p}22 !important;
     background: #fff !important;
     outline: none !important;
 }}
 
 /* ================================================================
-   BUTTONS
+   6. BUTTONS
    ================================================================ */
-.btn-primary,
-.btn.btn-primary {{
-    background: linear-gradient(135deg, {primary} 0%, {secondary} 100%) !important;
-    border: none !important;
-    border-radius: {'10px' if modern else '4px'} !important;
+.btn-primary {{
+    background: {p} !important;
+    background: linear-gradient(135deg, {p} 0%, {s} 100%) !important;
+    border-color: transparent !important;
+    border-radius: {r_sm} !important;
+    color: #fff !important;
     font-weight: 600 !important;
-    color: #fff !important;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
-    transition: transform 0.15s ease, box-shadow 0.2s ease !important;
+    box-shadow: 0 2px 8px {p}55 !important;
+    transition: transform 0.15s, box-shadow 0.2s !important;
 }}
-.btn-primary:hover, .btn.btn-primary:hover {{
+.btn-primary:hover, .btn-primary:focus {{
+    background: linear-gradient(135deg, {p} 30%, {s} 100%) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.2) !important;
-    opacity: 0.95 !important;
-}}
-
-.btn-secondary, .btn-default {{
-    background: #fff !important;
-    border: 1.5px solid {primary} !important;
-    color: {primary} !important;
-    border-radius: {'10px' if modern else '4px'} !important;
-    font-weight: 500 !important;
-    transition: all 0.15s ease !important;
-}}
-.btn-secondary:hover, .btn-default:hover {{
-    background: {primary} !important;
+    box-shadow: 0 4px 14px {p}66 !important;
     color: #fff !important;
 }}
-
-.btn-danger {{ border-radius: {'10px' if modern else '4px'} !important; }}
+.btn-default,
+.btn-secondary {{
+    background: #fff !important;
+    border: 1.5px solid {p} !important;
+    color: {p} !important;
+    border-radius: {r_sm} !important;
+    font-weight: 500 !important;
+}}
+.btn-default:hover, .btn-secondary:hover {{
+    background: {p}11 !important;
+    border-color: {p} !important;
+}}
 
 /* ================================================================
-   LIST VIEWS (e.g., Student List, Invoice List)
+   7. LIST VIEWS
    ================================================================ */
-.list-container,
-.result,
 .list-row,
-.list-item {{
+.list-item-container {{
     background: #fff !important;
-    border-radius: {'10px' if modern else '2px'} !important;
-    border: 1px solid rgba(0,0,0,0.06) !important;
-    box-shadow: {'rgba(100,100,111,0.08) 0px 4px 14px' if modern else 'none'} !important;
-    transition: transform 0.15s ease, box-shadow 0.2s ease !important;
+    border-radius: {r_sm} !important;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    box-shadow: {'0 1px 4px rgba(0,0,0,0.06)' if modern else 'none'} !important;
+    transition: background 0.15s ease !important;
 }}
-.list-row:hover {{
-    background: {primary_alpha} !important;
+.list-row:hover, .list-item-container:hover {{
+    background: {p}0D !important;
     transform: {'translateX(2px)' if modern else 'none'} !important;
 }}
-
-/* List header */
-.list-row-head,
-.list-header {{
-    background: {secondary}0D !important;
-    color: {secondary} !important;
+.list-row-head {{
+    background: {s}0D !important;
+    color: {s} !important;
     font-weight: 600 !important;
-    border-radius: {'10px 10px 0 0' if modern else '0'} !important;
+    border-bottom: 2px solid {p}33 !important;
 }}
-
-/* List checkboxes / stars */
 .list-subject a,
-.list-row a {{
-    color: {primary} !important;
+.list-row .subject-col a {{
+    color: {p} !important;
+    font-weight: 500 !important;
 }}
 
 /* ================================================================
-   DATA TABLES (Report & List Grid)
+   8. DATA TABLE (Grid / Report)
    ================================================================ */
-.dt-header-row th,
-.datatable .dt-cell--header {{
-    background: {secondary} !important;
+.dt-header .dt-cell--header,
+.datatable .dt-header-row th {{
+    background: {s} !important;
     color: #fff !important;
     font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.4px !important;
 }}
 .datatable .dt-row:hover .dt-cell {{
-    background: {primary_alpha} !important;
+    background: {p}0D !important;
 }}
-.datatable .dt-cell {{ border-color: rgba(0,0,0,0.05) !important; }}
+.dt-cell {{ border-color: rgba(0,0,0,0.05) !important; }}
 
 /* ================================================================
-   DIALOG / MODAL
+   9. MODAL / DIALOG
    ================================================================ */
 .modal-content {{
-    border-radius: {'16px' if modern else '6px'} !important;
+    border-radius: {r_lg} !important;
     border: none !important;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.22) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18) !important;
+    overflow: hidden !important;
 }}
 .modal-header {{
-    background: linear-gradient(135deg, {secondary}, {primary}) !important;
+    background: linear-gradient(135deg, {s} 0%, {p} 100%) !important;
     color: #fff !important;
-    border-radius: {'16px 16px 0 0' if modern else '6px 6px 0 0'} !important;
     border-bottom: none !important;
-    padding: 18px 24px !important;
+    padding: 16px 22px !important;
 }}
 .modal-header .modal-title,
 .modal-header h4,
-.modal-header h5 {{ color: #fff !important; font-weight: 700 !important; }}
-.modal-header .close {{ color: rgba(255,255,255,0.8) !important; }}
-.modal-body {{ padding: 24px !important; }}
+.modal-header h5 {{
+    color: #fff !important;
+    font-weight: 700 !important;
+}}
+.modal-header .btn-close,
+.modal-header .close {{
+    color: rgba(255,255,255,0.8) !important;
+    filter: brightness(100) !important;
+}}
+.modal-body {{ padding: 22px !important; }}
 .modal-footer {{
-    border-top: 1px solid rgba(0,0,0,0.07) !important;
-    padding: 16px 24px !important;
+    border-top: 1px solid rgba(0,0,0,0.06) !important;
+    padding: 14px 22px !important;
+    background: #fafbfc !important;
 }}
 
 /* ================================================================
-   TABS
+   10. TABS
    ================================================================ */
 .nav-tabs .nav-link.active,
 .form-tabs-list .nav-link.active {{
-    color: {primary} !important;
-    border-bottom: 3px solid {primary} !important;
+    color: {p} !important;
+    border-bottom: 3px solid {p} !important;
     font-weight: 600 !important;
     background: transparent !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
 }}
 .nav-tabs .nav-link:hover {{
-    color: {primary} !important;
-    border-bottom: 2px solid {primary}55 !important;
+    color: {p} !important;
 }}
 
 /* ================================================================
-   BREADCRUMBS & PAGE TITLE
+   11. PAGE TITLE / BREADCRUMBS
    ================================================================ */
-.breadcrumb-area .breadcrumb-item a {{
-    color: {primary} !important;
-}}
-.page-title,
-.title-text {{
-    color: {secondary} !important;
-    font-weight: 700 !important;
-}}
+.title-text, .page-title {{ color: {s} !important; font-weight: 700 !important; }}
+.breadcrumb-item a {{ color: {p} !important; }}
+.page-head {{ border-bottom: 1px solid rgba(0,0,0,0.07) !important; }}
 
 /* ================================================================
-   BADGES / INDICATORS
-   ================================================================ */
-.indicator-pill.green  {{ background: #e6f8f1 !important; color: #1a9c6b !important; }}
-.indicator-pill.yellow {{ background: #fef9e7 !important; color: #c9a700 !important; }}
-.indicator-pill.red    {{ background: #fdecea !important; color: #c0392b !important; }}
-.indicator-pill.blue   {{ background: {primary_alpha} !important; color: {primary} !important; }}
-
-/* ================================================================
-   ALERTS / TOASTS
-   ================================================================ */
-.alert-primary {{ border-left: 4px solid {primary} !important; }}
-
-/* ================================================================
-   WORKSPACE (Dashboard home)
+   12. WORKSPACE / DASHBOARD CARDS
    ================================================================ */
 .widget,
 .shortcut-widget-box,
 .dashboard-widget-box,
+.onboarding-widget-box,
 .frappe-card {{
-    background: rgba(255,255,255,{'0.80' if modern else '1.0'}) !important;
-    border-radius: {'14px' if modern else '6px'} !important;
-    border: 1px solid rgba(255,255,255,0.6) !important;
-    box-shadow: {'rgba(100,100,111,0.12) 0px 8px 24px' if modern else '0 1px 4px rgba(0,0,0,0.08)'} !important;
-    transition: box-shadow 0.25s ease, transform 0.2s ease !important;
+    background: #fff !important;
+    border-radius: {r} !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-shadow: {'0 4px 16px rgba(0,0,0,0.07)' if modern else '0 1px 3px rgba(0,0,0,0.07)'} !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }}
 .widget:hover, .shortcut-widget-box:hover {{
     transform: {'translateY(-3px)' if modern else 'none'} !important;
-    box-shadow: {'rgba(100,100,111,0.22) 0px 14px 30px' if modern else '0 4px 12px rgba(0,0,0,0.10)'} !important;
+    box-shadow: {'0 12px 28px rgba(0,0,0,0.12)' if modern else '0 3px 8px rgba(0,0,0,0.10)'} !important;
 }}
+.widget-head .widget-title {{ font-weight: 600 !important; color: {s} !important; }}
+.shortcut-widget-box .widget-title {{ color: {p} !important; }}
 
 /* ================================================================
-   REPORTS
+   13. INDICATOR PILLS / BADGES
    ================================================================ */
-.report-wrapper,
-.report-summary-wrapper {{ background: {bg} !important; }}
+.indicator-pill {{ border-radius: 20px !important; font-weight: 500 !important; }}
 
+/* ================================================================
+   14. INDICATOR / LINK COLOURS
+   ================================================================ */
+a, .help-box a {{ color: {p} !important; }}
+
+/* ================================================================
+   15. REPORT CONTAINER
+   ================================================================ */
+.report-summary-wrapper,
 .chart-container {{
     background: #fff !important;
-    border-radius: {'12px' if modern else '4px'} !important;
-    box-shadow: {'rgba(100,100,111,0.10) 0px 6px 20px' if modern else 'none'} !important;
+    border-radius: {r} !important;
+    box-shadow: {'0 4px 16px rgba(0,0,0,0.07)' if modern else 'none'} !important;
     padding: 16px !important;
 }}
 
 /* ================================================================
-   SCROLLBAR (global)
+   16. SCROLLBARS
    ================================================================ */
-::-webkit-scrollbar {{ width: 6px; height: 6px; }}
+::-webkit-scrollbar {{ width: 5px; height: 5px; }}
 ::-webkit-scrollbar-track {{ background: transparent; }}
-::-webkit-scrollbar-thumb {{
-    background: {primary}66;
-    border-radius: 6px;
-}}
-::-webkit-scrollbar-thumb:hover {{ background: {primary}; }}
-
-/* ================================================================
-   PRINT overrides – keep clean
-   ================================================================ */
-@media print {{
-    .navbar, .layout-side-section {{ display: none !important; }}
-    body {{ background: #fff !important; font-family: '{font}', sans-serif !important; }}
-}}
+::-webkit-scrollbar-thumb {{ background: {p}66; border-radius: 8px; }}
+::-webkit-scrollbar-thumb:hover {{ background: {p}; }}
 """
+
     return css
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-#  Login page  (served as guest)
+#  Login page CSS
 # ──────────────────────────────────────────────────────────────────────────────
 @frappe.whitelist(allow_guest=True)
 def get_login_page_css():
@@ -389,10 +443,9 @@ def get_login_page_css():
         return ""
 
     theme = frappe.get_doc("LSERP Theme Settings", "LSERP Theme Settings")
-
-    primary   = theme.primary_color   or "#078586"
-    secondary = theme.secondary_color or "#282f3b"
-    font      = getattr(theme, "font_family", "Inter") or "Inter"
+    p     = theme.primary_color   or "#078586"
+    s     = theme.secondary_color or "#282f3b"
+    font  = getattr(theme, "font_family", "Inter") or "Inter"
     font_url_map = {
         "Inter":   "Inter:wght@300;400;500;600;700",
         "Outfit":  "Outfit:wght@300;400;500;600;700",
@@ -406,46 +459,40 @@ def get_login_page_css():
 
 body {{
     font-family: '{font}', sans-serif !important;
-    background: linear-gradient(135deg, {secondary} 0%, {primary} 100%) !important;
+    background: linear-gradient(135deg, {s} 0%, {p} 100%) !important;
     min-height: 100vh;
 }}
-
-.login-content, .page-card, .form-login-wrapper {{
-    background: rgba(255, 255, 255, 0.97) !important;
+.login-content, .page-card {{
+    background: #fff !important;
     border-radius: 20px !important;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.22) !important;
     padding: 40px !important;
     border: none !important;
 }}
-
 .login-content h2, .page-card h2, .page-card h3 {{
-    color: {secondary} !important;
+    color: {s} !important;
     font-weight: 700 !important;
 }}
-
 .login-content .btn-primary, .page-card .btn-primary {{
-    background: linear-gradient(135deg, {primary}, {secondary}) !important;
+    background: linear-gradient(135deg, {p} 0%, {s} 100%) !important;
     border: none !important;
     border-radius: 10px !important;
-    padding: 12px 24px !important;
     font-weight: 600 !important;
     width: 100% !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-    transition: opacity 0.2s, transform 0.15s !important;
+    padding: 11px 20px !important;
+    box-shadow: 0 4px 12px {p}44 !important;
 }}
 .login-content .btn-primary:hover, .page-card .btn-primary:hover {{
     opacity: 0.9 !important;
     transform: translateY(-1px) !important;
 }}
-
 .login-content .form-control, .page-card .form-control {{
     border-radius: 8px !important;
-    border: 1.5px solid #e0e0e0 !important;
+    border: 1.5px solid #dde2e8 !important;
 }}
 .login-content .form-control:focus, .page-card .form-control:focus {{
-    border-color: {primary} !important;
-    box-shadow: 0 0 0 3px {primary}33 !important;
+    border-color: {p} !important;
+    box-shadow: 0 0 0 3px {p}22 !important;
 }}
-
-.login-content a, .page-card a {{ color: {primary} !important; }}
+.login-content a, .page-card a {{ color: {p} !important; }}
 """
