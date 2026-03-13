@@ -51,59 +51,226 @@ def get_theme_css():
         font_import = f"@import url('https://fonts.googleapis.com/css2?family={font_url}&display=swap');"
         font_stack  = f"'{font}', sans-serif"
 
-    # ── Density tokens (SAP Fiori Cozy=44px, Compact=32px) ────────────────────
-    if density == "Ultra Compact":
-        row_h   = "24px"
-        inp_h   = "20px"
-        pad_f   = "3px 6px"     # form section padding
-        pad_c   = "2px 4px"     # control/field padding
-        fsize   = "12px"
-        label_s = "10px"
-        sec_pad = "6px 10px"
-    elif density == "Compact":
-        row_h   = "32px"
-        inp_h   = "24px"
-        pad_f   = "6px 12px"
-        pad_c   = "3px 8px"
-        fsize   = "13px"
-        label_s = "11px"
-        sec_pad = "8px 14px"
-    else:  # Comfortable
-        row_h   = "44px"
-        inp_h   = "28px"
-        pad_f   = "14px 16px"
-        pad_c   = "5px 10px"
-        fsize   = "14px"
-        label_s = "12px"
-        sec_pad = "14px 18px"
+    if density == "Compact":
+        # USE THE USER-PROVIDED EXACT SAP FIORI PAYLOAD
+        css = f"""
+/* =====================================================
+   ERPNext SAP Fiori Style Theme (User Provided Payload)
+   ===================================================== */
 
-    # ── Border radius tokens ───────────────────────────────────────────────────
-    if density == "Comfortable" and modern:
-        r, r_sm, r_lg = "12px", "8px", "16px"
-    elif density == "Comfortable":
-        r, r_sm, r_lg = "6px", "4px", "8px"
+:root {{
+  --sapPrimary: {p};
+  --sapPrimaryHover: {s};
+  --sapBackground: #f5f6f7;
+  --sapPanel: #ffffff;
+  --sapBorder: #d9d9d9;
+  --sapText: #32363a;
+  --sapFont: {font_stack};
+  --sapSuccess: #107e3e;
+  --sapWarning: #e9730c;
+  --sapError: #bb0000;
+  
+  /* Frappe Variable Overrides to match SAP */
+  --primary: var(--sapPrimary);
+  --btn-primary: var(--sapPrimary);
+  --text-color: var(--sapText);
+  --navbar-bg: #ffffff;
+  --bg-color: var(--sapBackground);
+  --control-bg: #fff;
+  --border-color: var(--sapBorder);
+  --dark-border-color: var(--sapBorder);
+  --table-border-color: var(--sapBorder);
+}}
+
+/* ---------- GLOBAL ---------- */
+body {{
+  font-family: var(--sapFont) !important;
+  background: var(--sapBackground) !important;
+  color: var(--sapText) !important;
+  font-size: 13px !important;
+}}
+
+.page-container {{ background: var(--sapBackground) !important; }}
+.layout-main-section {{ background: transparent !important; }}
+
+/* ---------- NAVBAR ---------- */
+.navbar, .desk-navbar {{
+  background: white !important;
+  border-bottom: 1px solid var(--sapBorder) !important;
+  height: 48px !important;
+  box-shadow: none !important;
+}}
+.navbar .navbar-brand {{ font-weight: 600; font-size: 16px; color: var(--sapText) !important; }}
+.navbar .nav-link, .navbar * {{ color: var(--sapText) !important; }}
+
+/* ---------- SIDEBAR ---------- */
+.layout-side-section, .desk-sidebar {{
+  background: white !important;
+  border-right: 1px solid var(--sapBorder) !important;
+}}
+.sidebar-item, .standard-sidebar-item {{
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  color: var(--sapText) !important;
+}}
+.sidebar-item:hover, .standard-sidebar-item:hover {{ background: #f0f6ff !important; }}
+.sidebar-item.active, .standard-sidebar-item.selected {{ background: #f0f6ff !important; font-weight: 600 !important; }}
+
+/* ---------- BUTTONS ---------- */
+.btn-primary {{
+  background: var(--sapPrimary) !important;
+  border-color: var(--sapPrimary) !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}}
+.btn-primary:hover {{ background: var(--sapPrimaryHover) !important; }}
+.btn-default, .btn-secondary {{
+  background: white !important;
+  border: 1px solid var(--sapBorder) !important;
+  border-radius: 4px !important;
+}}
+
+/* ---------- INPUT FIELDS ---------- */
+.form-control, .awesomplete input {{
+  border: 1px solid var(--sapBorder) !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+}}
+.form-control:focus {{
+  border-color: var(--sapPrimary) !important;
+  box-shadow: none !important;
+}}
+
+/* ---------- FORM SECTIONS ---------- */
+.form-section, .frappe-doc-section {{
+  background: var(--sapPanel) !important;
+  border: 1px solid var(--sapBorder) !important;
+  border-radius: 6px !important;
+  padding: 16px !important;
+  box-shadow: none !important;
+  margin-bottom: 8px !important;
+}}
+.section-head, .form-section-heading {{
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-bottom: none !important;
+  color: var(--sapText) !important;
+}}
+.control-label {{
+  font-weight: 500 !important;
+  color: #6a6d70 !important;
+}}
+
+/* ---------- TABLES ---------- */
+.grid-body {{ background: white !important; }}
+.grid-heading-row, .dt-header-row th {{
+  background: #fafafa !important;
+  border-bottom: 1px solid var(--sapBorder) !important;
+  color: var(--sapText) !important;
+}}
+.grid-row:hover, .dt-row:hover .dt-cell {{ background: #f0f6ff !important; }}
+.dt-cell {{ border-color: var(--sapBorder) !important; }}
+
+/* ---------- LIST VIEW ---------- */
+.list-row {{
+  border-bottom: 1px solid var(--sapBorder) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}}
+.list-row:hover {{ background: #f0f6ff !important; }}
+.list-row-head {{ background: #fafafa !important; border-bottom: 1px solid var(--sapBorder) !important; }}
+
+/* ---------- DASHBOARD WIDGET ---------- */
+.widget, .shortcut-widget-box, .frappe-card {{
+  background: white !important;
+  border: 1px solid var(--sapBorder) !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}}
+.widget-head, .widget-title {{ font-weight: 600 !important; color: var(--sapText) !important; }}
+
+/* ---------- DIALOG WINDOWS ---------- */
+.modal-content {{
+  border-radius: 6px !important;
+  border: 1px solid var(--sapBorder) !important;
+}}
+.modal-header {{
+  background: #fff !important;
+  border-bottom: 1px solid var(--sapBorder) !important;
+  color: var(--sapText) !important;
+}}
+.modal-title {{ color: var(--sapText) !important; }}
+.modal-header .btn-close {{ filter: none !important; color: #6a6d70 !important; }}
+
+/* ---------- STATUS COLORS ---------- */
+.indicator.green, .indicator-pill.green {{ background: var(--sapSuccess) !important; color: #fff !important; }}
+.indicator.orange, .indicator-pill.orange {{ background: var(--sapWarning) !important; color: #fff !important; }}
+.indicator.red, .indicator-pill.red {{ background: var(--sapError) !important; color: #fff !important; }}
+
+/* ---------- WORKSPACE ICONS ---------- */
+.workspace-icon {{ background: #f4f5f7 !important; border-radius: 6px !important; }}
+
+/* ---------- REPORT TABLE ---------- */
+.report-wrapper table {{ border: 1px solid var(--sapBorder) !important; }}
+.report-wrapper th {{ background: #fafafa !important; }}
+
+/* ---------- TAB SECTION ---------- */
+.form-tabs {{ border-bottom: 1px solid var(--sapBorder) !important; }}
+.form-tabs .nav-link.active {{ border-bottom: 2px solid var(--sapPrimary) !important; color: var(--sapPrimary) !important; }}
+
+/* ---------- DROPDOWN ---------- */
+.dropdown-menu {{ border: 1px solid var(--sapBorder) !important; border-radius: 4px !important; }}
+
+/* ---------- SCROLLBAR ---------- */
+::-webkit-scrollbar {{ width: 8px !important; }}
+::-webkit-scrollbar-thumb {{ background: #c7c7c7 !important; border-radius: 4px !important; }}
+"""
     else:
-        # Compact/Ultra Compact → SAP uses very small radii (4px max)
-        r, r_sm, r_lg = "4px", "2px", "4px"
+        # ── ORIGINAL / STANDARD OUTPUT BUILDER FOR NON-COMPACT ───────────────────
+        
+        # ── Border radius tokens ───────────────────────────────────────────────────
+        if density == "Comfortable" and modern:
+            r, r_sm, r_lg = "12px", "8px", "16px"
+        elif density == "Comfortable":
+            r, r_sm, r_lg = "6px", "4px", "8px"
+        else:
+            r, r_sm, r_lg = "4px", "2px", "4px"
 
-    # ── Navbar CSS ─────────────────────────────────────────────────────────────
-    if navbar_style == "Gradient":
-        navbar_bg  = f"linear-gradient(135deg, {s} 0%, {p} 100%)"
-        navbar_txt = "rgba(255,255,255,0.92)"
-        navbar_shadow = "0 2px 10px rgba(0,0,0,0.18)"
-        navbar_border = "none"
-    elif navbar_style == "Flat":
-        navbar_bg  = p
-        navbar_txt = "#fff"
-        navbar_shadow = f"0 1px 4px {p}44"
-        navbar_border = "none"
-    else:  # Minimal
-        navbar_bg  = "#ffffff"
-        navbar_txt = "#1a1f36"
-        navbar_shadow = "none"
-        navbar_border = f"1px solid #e2e6ea"
+        if density == "Ultra Compact":
+            row_h   = "24px"
+            inp_h   = "20px"
+            pad_f   = "3px 6px"     
+            pad_c   = "2px 4px"     
+            fsize   = "12px"
+            label_s = "10px"
+            sec_pad = "6px 10px"
+        else:  # Comfortable
+            row_h   = "44px"
+            inp_h   = "28px"
+            pad_f   = "14px 16px"
+            pad_c   = "5px 10px"
+            fsize   = "14px"
+            label_s = "12px"
+            sec_pad = "14px 18px"
+            
+        if navbar_style == "Gradient":
+            navbar_bg  = f"linear-gradient(135deg, {s} 0%, {p} 100%)"
+            navbar_txt = "rgba(255,255,255,0.92)"
+            navbar_shadow = "0 2px 10px rgba(0,0,0,0.18)"
+            navbar_border = "none"
+        elif navbar_style == "Flat":
+            navbar_bg  = p
+            navbar_txt = "#fff"
+            navbar_shadow = f"0 1px 4px {p}44"
+            navbar_border = "none"
+        else:  # Minimal
+            navbar_bg  = "#ffffff"
+            navbar_txt = "#1a1f36"
+            navbar_shadow = "none"
+            navbar_border = f"1px solid #e2e6ea"
 
-    css = f"""
+        css = f"""
 /* ================================================================
    LSERP Theme: {theme.theme_name}  |  Density: {density}  |  Navbar: {navbar_style}
    ================================================================ */
@@ -167,7 +334,7 @@ html, body, input, button, select, textarea,
     background: {navbar_bg} !important;
     border-bottom: {navbar_border} !important;
     box-shadow: {navbar_shadow} !important;
-    min-height: {'48px' if density == 'Comfortable' else '40px'} !important;
+    min-height: 48px !important;
 }}
 .navbar *, .navbar .btn, .navbar .nav-link,
 .navbar .search-bar input, .navbar .form-control,
@@ -189,8 +356,8 @@ html, body, input, button, select, textarea,
 .desk-sidebar .standard-sidebar-item span,
 .sidebar-section-head {{ color: rgba(255,255,255,0.75) !important; font-size: {label_s} !important; }}
 .standard-sidebar-item, .sidebar-item {{
-    padding: {'8px 14px' if density == 'Comfortable' else '4px 10px'} !important;
-    min-height: {'36px' if density == 'Comfortable' else '28px'} !important;
+    padding: 8px 14px !important;
+    min-height: 36px !important;
 }}
 .standard-sidebar-item:hover, .sidebar-item:hover {{
     background: rgba(255,255,255,0.10) !important;
@@ -221,9 +388,8 @@ html, body, input, button, select, textarea,
     border: 1px solid #e2e6ea !important;
     box-shadow: {'0 1px 4px rgba(0,0,0,0.06)' if modern else 'none'} !important;
     padding: {sec_pad} !important;
-    margin-bottom: {'10px' if density == 'Comfortable' else '4px'} !important;
+    margin-bottom: 10px !important;
 }}
-/* Section Headers — SAP-style: subtle, not loud */
 .section-head, .form-section-heading, .section-title {{
     color: {s} !important;
     font-weight: 600 !important;
@@ -231,18 +397,16 @@ html, body, input, button, select, textarea,
     text-transform: uppercase !important;
     letter-spacing: 0.6px !important;
     border-bottom: 1px solid #e2e6ea !important;
-    padding-bottom: {'6px' if density == 'Comfortable' else '3px'} !important;
-    margin-bottom: {'10px' if density == 'Comfortable' else '4px'} !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 10px !important;
     background: transparent !important;
 }}
-/* Field Labels */
 .control-label, .frappe-control label {{
     color: #52606d !important;
     font-weight: 500 !important;
     font-size: {label_s} !important;
-    margin-bottom: {'4px' if density == 'Comfortable' else '1px'} !important;
+    margin-bottom: 4px !important;
 }}
-/* Input Controls */
 .form-control, .frappe-control .form-control,
 .input-with-feedback, .like-disabled-input {{
     border: 1px solid #c9d1d9 !important;
@@ -260,7 +424,6 @@ html, body, input, button, select, textarea,
     background: #fff !important;
     outline: none !important;
 }}
-/* Read-only fields */
 .like-disabled-input, [readonly] {{
     background: #f5f7fa !important;
     color: #6c757d !important;
@@ -276,14 +439,14 @@ html, body, input, button, select, textarea,
     height: {inp_h} !important;
     padding: {pad_c} !important;
     font-size: {fsize} !important;
-    box-shadow: {'0 2px 6px ' + p + '44' if density == 'Comfortable' else 'none'} !important;
+    box-shadow: 0 2px 6px {p}44 !important;
     transition: background 0.15s, box-shadow 0.15s !important;
 }}
 .btn-primary:hover, .btn-primary:focus {{
     background: {s} !important;
     border-color: {s} !important;
     color: #fff !important;
-    box-shadow: {'0 4px 12px ' + p + '55' if density == 'Comfortable' else 'none'} !important;
+    box-shadow: 0 4px 12px {p}55 !important;
 }}
 .btn-default, .btn-secondary {{
     background: #fff !important;
@@ -307,7 +470,7 @@ html, body, input, button, select, textarea,
     border-bottom: 1px solid #e9ecef !important;
     box-shadow: none !important;
     min-height: {row_h} !important;
-    padding: {'6px 12px' if density == 'Compact' else '2px 8px' if density == 'Ultra Compact' else '8px 14px'} !important;
+    padding: 8px 14px !important;
     transition: background 0.1s ease !important;
 }}
 .list-row:hover, .list-item-container:hover {{
@@ -360,27 +523,27 @@ html, body, input, button, select, textarea,
     background: {'linear-gradient(135deg, ' + s + ' 0%, ' + p + ' 100%)' if navbar_style == 'Gradient' else p if navbar_style == 'Flat' else '#f5f7fa'} !important;
     color: {'#fff' if navbar_style != 'Minimal' else '#1a1f36'} !important;
     border-bottom: {'none' if navbar_style != 'Minimal' else '1px solid #e2e6ea'} !important;
-    padding: {'14px 20px' if density == 'Comfortable' else '8px 14px'} !important;
+    padding: 14px 20px !important;
 }}
 .modal-header .modal-title, .modal-header h4, .modal-header h5 {{
     color: {'#fff' if navbar_style != 'Minimal' else '#1a1f36'} !important;
     font-weight: 600 !important;
-    font-size: {'1rem' if density == 'Comfortable' else '0.9rem'} !important;
+    font-size: 1rem !important;
 }}
 .modal-header .btn-close, .modal-header .close {{
     color: {'rgba(255,255,255,0.85)' if navbar_style != 'Minimal' else '#6c757d'} !important;
     filter: {'brightness(100)' if navbar_style != 'Minimal' else 'none'} !important;
 }}
-.modal-body {{ padding: {'20px' if density == 'Comfortable' else '12px'} !important; }}
+.modal-body {{ padding: 20px !important; }}
 .modal-footer {{
     border-top: 1px solid #e2e6ea !important;
-    padding: {'12px 20px' if density == 'Comfortable' else '8px 12px'} !important;
+    padding: 12px 20px !important;
     background: #fafbfc !important;
 }}
 
 /* ── 10. Tabs ────────────────────────────────────────────────── */
 .nav-tabs .nav-link {{
-    padding: {'8px 16px' if density == 'Comfortable' else '4px 10px'} !important;
+    padding: 8px 16px !important;
     font-size: {fsize} !important;
 }}
 .nav-tabs .nav-link.active, .form-tabs-list .nav-link.active {{
@@ -398,12 +561,12 @@ html, body, input, button, select, textarea,
 .title-text, .page-title {{
     color: #1a1f36 !important;
     font-weight: 600 !important;
-    font-size: {'1.1rem' if density == 'Comfortable' else '0.95rem'} !important;
+    font-size: 1.1rem !important;
 }}
 .breadcrumb-item a {{ color: {p} !important; font-size: {fsize} !important; }}
 .page-head {{
     border-bottom: 1px solid #e2e6ea !important;
-    padding: {'8px 0' if density == 'Comfortable' else '4px 0'} !important;
+    padding: 8px 0 !important;
 }}
 
 /* ── 12. Workspace Cards ─────────────────────────────────────── */
@@ -413,7 +576,7 @@ html, body, input, button, select, textarea,
     border-radius: {r} !important;
     border: 1px solid #e2e6ea !important;
     box-shadow: {'0 4px 14px rgba(0,0,0,0.07)' if modern else '0 1px 3px rgba(0,0,0,0.06)'} !important;
-    padding: {'14px' if density == 'Comfortable' else '8px'} !important;
+    padding: 14px !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }}
 .widget:hover, .shortcut-widget-box:hover {{
@@ -447,22 +610,16 @@ html, body, input, button, select, textarea,
     border-radius: {r} !important;
     border: 1px solid #e2e6ea !important;
     box-shadow: none !important;
-    padding: {'16px' if density == 'Comfortable' else '8px'} !important;
+    padding: 16px !important;
 }}
 
 /* ── 16. Scrollbars ──────────────────────────────────────────── */
-::-webkit-scrollbar {{ width: {'5px' if density == 'Comfortable' else '3px'}; height: {'5px' if density == 'Comfortable' else '3px'}; }}
+::-webkit-scrollbar {{ width: 5px; height: 5px; }}
 ::-webkit-scrollbar-track {{ background: transparent; }}
 ::-webkit-scrollbar-thumb {{ background: {p}55; border-radius: 4px; }}
 ::-webkit-scrollbar-thumb:hover {{ background: {p}; }}
-
-/* ── 17. Density: Compact / Ultra Compact extras ─────────────── */
-{'/* Compact: reduce form margins, section gaps */' if density != 'Comfortable' else ''}
-{'.frappe-doc-section + .frappe-doc-section { margin-top: 4px !important; }' if density != 'Comfortable' else ''}
-{'.page-content { padding: 8px 12px !important; }' if density == 'Compact' else ''}
-{'.page-content { padding: 4px 6px !important; }' if density == 'Ultra Compact' else ''}
-{'.form-column { padding: 0 6px !important; }' if density != 'Comfortable' else ''}
 """
+
 
     # Append any custom CSS from the theme record
     if theme.custom_css:
