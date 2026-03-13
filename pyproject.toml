@@ -1,0 +1,16 @@
+[project]
+name = "lserp_customization"
+authors = [
+    { name = "LEAPSYS", email = "info@leapsys.com"}
+]
+description = "LSERP Customization"
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = [
+    # "frappe~=15.0.0" # add frappe dependency if required
+]
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
