@@ -7,7 +7,10 @@ from frappe.model.document import Document
 
 class LSERPBrandTheme(Document):
     def before_save(self):
-        # Prevent editing predefined themes unless you're a developer
+        # Prevent editing predefined themes unless you're a developer or during a data import/migration
+        if getattr(frappe.flags, "in_import", False) or getattr(frappe.flags, "in_patch", False) or getattr(frappe.flags, "in_install", False) or getattr(frappe.flags, "in_migrate", False):
+            return
+
         if self.is_predefined and not frappe.conf.get("developer_mode"):
             frappe.throw(
                 "Predefined themes are read-only. Duplicate this theme to customize it.",
