@@ -14,6 +14,8 @@
   "brand_logo",
   "ui_section",
   "enable_modern_dashboard",
+  "ui_density",
+  "navbar_style",
   "font_family",
   "colors_section",
   "primary_color",
@@ -73,15 +75,30 @@
    "fieldname": "enable_modern_dashboard",
    "fieldtype": "Check",
    "label": "Enable Modern Dashboard UI",
-   "description": "Glassmorphism cards, shadows, hover animations"
+   "description": "Glassmorphism cards, shadows, hover animations on workspace"
   },
   {
-   "depends_on": "eval:doc.enable_modern_dashboard == 1",
+   "default": "Comfortable",
+   "fieldname": "ui_density",
+   "fieldtype": "Select",
+   "label": "UI Density",
+   "options": "Comfortable\nCompact\nUltra Compact",
+   "description": "Compact = SAP Fiori style (32px rows, tight padding). Ultra Compact = maximum information density."
+  },
+  {
+   "default": "Gradient",
+   "fieldname": "navbar_style",
+   "fieldtype": "Select",
+   "label": "Navbar Style",
+   "options": "Gradient\nFlat\nMinimal",
+   "description": "Gradient = brand gradient. Flat = solid primary. Minimal = white bar with subtle border."
+  },
+  {
    "default": "Inter",
    "fieldname": "font_family",
    "fieldtype": "Select",
    "label": "Font Family",
-   "options": "Inter\nOutfit\nRoboto\nDM Sans"
+   "options": "Inter\nOutfit\nRoboto\nDM Sans\n72"
   },
   {
    "fieldname": "colors_section",
@@ -127,7 +144,7 @@
    "fieldtype": "Code",
    "label": "Custom CSS",
    "options": "CSS",
-   "description": "Appended after all auto-generated CSS. Use this for fine-grained tweaks."
+   "description": "Appended after all auto-generated CSS. Use for fine-grained tweaks."
   }
  ],
  "index_web_pages_for_search": 0,

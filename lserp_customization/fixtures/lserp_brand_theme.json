@@ -2,7 +2,7 @@
   {
     "doctype": "LSERP Brand Theme",
     "theme_name": "Enumoo",
-    "description": "Official Enumoo brand theme — Teal and Dark Navy",
+    "description": "Official Enumoo brand — Teal and Dark Navy",
     "is_predefined": 1,
     "brand_name": "Enumoo",
     "primary_color": "#078586",
@@ -12,12 +12,31 @@
     "sidebar_background": "#1f2530",
     "font_family": "Inter",
     "enable_modern_dashboard": 1,
+    "ui_density": "Comfortable",
+    "navbar_style": "Gradient",
+    "custom_css": ""
+  },
+  {
+    "doctype": "LSERP Brand Theme",
+    "theme_name": "Enumoo Compact",
+    "description": "Enumoo brand in SAP Fiori compact style — maximum information density",
+    "is_predefined": 1,
+    "brand_name": "Enumoo",
+    "primary_color": "#078586",
+    "secondary_color": "#282f3b",
+    "background_color": "#f0f3f9",
+    "text_color": "#4a4e56",
+    "sidebar_background": "#1f2530",
+    "font_family": "72",
+    "enable_modern_dashboard": 0,
+    "ui_density": "Compact",
+    "navbar_style": "Flat",
     "custom_css": ""
   },
   {
     "doctype": "LSERP Brand Theme",
     "theme_name": "LEAPSYS",
-    "description": "Official LEAPSYS brand theme — Signature Red",
+    "description": "Official LEAPSYS brand — Signature Red",
     "is_predefined": 1,
     "brand_name": "LEAPSYS",
     "primary_color": "#E1251B",
@@ -27,12 +46,31 @@
     "sidebar_background": "#1D1D1B",
     "font_family": "Inter",
     "enable_modern_dashboard": 1,
+    "ui_density": "Comfortable",
+    "navbar_style": "Gradient",
+    "custom_css": ""
+  },
+  {
+    "doctype": "LSERP Brand Theme",
+    "theme_name": "LEAPSYS Compact",
+    "description": "LEAPSYS brand in SAP Fiori compact style",
+    "is_predefined": 1,
+    "brand_name": "LEAPSYS",
+    "primary_color": "#E1251B",
+    "secondary_color": "#1D1D1B",
+    "background_color": "#fafafa",
+    "text_color": "#333333",
+    "sidebar_background": "#1D1D1B",
+    "font_family": "72",
+    "enable_modern_dashboard": 0,
+    "ui_density": "Compact",
+    "navbar_style": "Flat",
     "custom_css": ""
   },
   {
     "doctype": "LSERP Brand Theme",
     "theme_name": "Standard Light",
-    "description": "Clean standard light theme (Frappe default colors)",
+    "description": "Clean standard light theme",
     "is_predefined": 1,
     "brand_name": "",
     "primary_color": "#171717",
@@ -42,6 +80,8 @@
     "sidebar_background": "#ffffff",
     "font_family": "Inter",
     "enable_modern_dashboard": 0,
+    "ui_density": "Comfortable",
+    "navbar_style": "Minimal",
     "custom_css": ""
   }
 ]
