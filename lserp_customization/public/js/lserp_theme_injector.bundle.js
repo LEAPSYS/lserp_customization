@@ -3,6 +3,7 @@ frappe.provide('lserp_customization.theme');
 $(document).ready(function() {
     lserp_customization.theme.apply_theme();
     lserp_customization.theme.apply_branding();
+    lserp_customization.theme.apply_login_theme();
 });
 
 // ─────────────────────────────────────────────────────────────

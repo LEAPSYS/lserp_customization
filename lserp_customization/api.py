@@ -169,3 +169,77 @@ input, button, select, textarea, .form-control {{
 """
 
     return css
+
+
+@frappe.whitelist(allow_guest=True)
+def get_login_page_css():
+    """Returns branded CSS specifically for the Frappe login page."""
+    if not frappe.db.exists("LSERP Theme Settings", "LSERP Theme Settings"):
+        return ""
+
+    theme = frappe.get_doc("LSERP Theme Settings", "LSERP Theme Settings")
+
+    primary   = theme.primary_color   or "#078586"
+    secondary = theme.secondary_color or "#282f3b"
+    font      = getattr(theme, "font_family", "Inter") or "Inter"
+    font_url_map = {
+        "Inter":   "Inter:wght@300;400;500;600;700",
+        "Outfit":  "Outfit:wght@300;400;500;600;700",
+        "Roboto":  "Roboto:wght@300;400;500;700",
+        "DM Sans": "DM+Sans:wght@300;400;500;600;700",
+    }
+    font_url = font_url_map.get(font, font_url_map["Inter"])
+
+    return f"""
+@import url('https://fonts.googleapis.com/css2?family={font_url}&display=swap');
+
+body {{
+    font-family: '{font}', sans-serif !important;
+    background: linear-gradient(135deg, {secondary} 0%, {primary} 100%) !important;
+    min-height: 100vh;
+}}
+
+/* Login card */
+.login-content, .page-card, .form-login-wrapper {{
+    background: rgba(255, 255, 255, 0.97) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25) !important;
+    padding: 40px !important;
+    border: none !important;
+}}
+
+/* Heading */
+.login-content h2, .page-card h2, .page-card h3 {{
+    color: {secondary} !important;
+    font-weight: 700 !important;
+}}
+
+/* Submit button */
+.login-content .btn-primary, .page-card .btn-primary {{
+    background: linear-gradient(135deg, {primary}, {secondary}) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    width: 100% !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    transition: opacity 0.2s, transform 0.15s !important;
+}}
+.login-content .btn-primary:hover, .page-card .btn-primary:hover {{
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
+}}
+
+/* Inputs */
+.login-content .form-control, .page-card .form-control {{
+    border-radius: 8px !important;
+    border: 1.5px solid #e0e0e0 !important;
+}}
+.login-content .form-control:focus, .page-card .form-control:focus {{
+    border-color: {primary} !important;
+    box-shadow: 0 0 0 3px {primary}33 !important;
+}}
+
+/* Links */
+.login-content a, .page-card a {{ color: {primary} !important; }}
+"""
