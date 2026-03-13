@@ -36,14 +36,26 @@ lserp_customization.theme.apply_branding = function() {
                 // Change Navbar Brand
                 $('.navbar-brand .app-logo, .navbar-brand .app-logo-text, .app-logo-text').text(brand_name);
                 // Try grabbing elements with title=ERPNext
-                $('[title="ERPNext"]').attr('title', brand_name);
+                $('[title="ERPNext"], [title="Frappe"]').attr('title', brand_name);
+                
+                // v16 Workspace & Desktop Overrides
+                $('.workspace-title, .page-title h1, .desktop-app-name').each(function() {
+                    if($(this).text().includes('ERPNext')) {
+                        $(this).text($(this).text().replace('ERPNext', brand_name));
+                    }
+                });
+                
+                // Force Document Title if Router changes it back
+                if(document.title.includes("ERPNext")) {
+                    document.title = document.title.replace("ERPNext", brand_name);
+                }
             }, 500);
         }
 
         if (brand_logo) {
             frappe.boot.app_logo_url = brand_logo;
             setInterval(function() {
-                $('.navbar-brand img, .app-logo img, .navbar-brand .app-logo-url img').attr('src', brand_logo);
+                $('.navbar-brand img, .app-logo img, .navbar-brand .app-logo-url img, .workspace-logo img').attr('src', brand_logo);
             }, 500);
         }
     }
