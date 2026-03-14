@@ -59,49 +59,75 @@ lserp_customization.theme.apply_branding = function() {
             lserp_customization.theme._walk_and_replace_text(document.body, brand_name);
             lserp_customization.theme._replace_titles(brand_name);
         }
+
+        // Add Floating Version Badge
+        const app_version = frappe.boot.lserp_theme.app_version || '0.0.1';
+        if ($('#lserp-version-badge').length === 0) {
+            $('body').append(`
+                <div id="lserp-version-badge" style="position: fixed; bottom: 8px; right: 12px; z-index: 9999; font-size: 11px; color: var(--text-muted); background: var(--bg-color); padding: 2px 6px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); opacity: 0.8; pointer-events: none;">
+                    v${app_version}
+                </div>
+            `);
+        }
     }
 };
 
 // ─────────────────────────────────────────────────────────────
-//  3.  Inject Branding Header into Sidebar
+//  3.  Inject Branding Header into Sidebar (Aggressive CSS Method)
 // ─────────────────────────────────────────────────────────────
 lserp_customization.theme._inject_sidebar_branding = function(brand_name, brand_logo) {
-    // 1. Target the Frappe V15 native App Switcher (Sidebar Dropdown)
-    const $switcher = $('.sidebar-item-wrapper.dropdown .sidebar-toggle-btn');
-    if ($switcher.length > 0) {
+    if ($('#lserp-switcher-override').length === 0) {
+        let css = `
+/* ── Sidebar App Switcher Branding Override ── */
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-brand-text {
+    font-size: 0 !important;
+    visibility: hidden !important;
+}
+`;
+        if (brand_name) {
+            css += `
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-brand-text::after {
+    content: "${brand_name}" !important;
+    visibility: visible !important;
+    display: block;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: var(--primary) !important;
+    opacity: 1 !important;
+}
+`;
+        }
         if (brand_logo) {
-            // Replace the default squircle SVG with our exact img
-            const $iconContainer = $switcher.find('.sidebar-item-icon');
-            if ($iconContainer.length > 0 && $iconContainer.find('img.custom-app-logo').length === 0) {
-                $iconContainer.empty().css({
-                    'background': 'transparent',
-                    'display': 'flex',
-                    'align-items': 'center',
-                    'justify-content': 'center',
-                    'padding': '0',
-                    'border-radius': '0'
-                });
-                $iconContainer.append(`<img class="custom-app-logo" src="${brand_logo}" style="width: 100%; height: 100%; object-fit: contain;">`);
-            }
+            css += `
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-item-icon svg {
+    display: none !important;
+}
+.sidebar-item-wrapper.dropdown .sidebar-toggle-btn .sidebar-item-icon {
+    background-image: url('${brand_logo}') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}
+`;
         }
 
+        $("<style id='lserp-switcher-override'>")
+            .prop("type", "text/css")
+            .html(css)
+            .appendTo("head");
+    }
+
+    // Also run the manual fallback for V14 or non-standard switches
+    const $switcher = $('.sidebar-item-wrapper.dropdown .sidebar-toggle-btn');
+    if ($switcher.length > 0) {
         if (brand_name) {
             const $brandText = $switcher.find('.sidebar-brand-text');
             if ($brandText.length > 0 && !$brandText.data('lserp-fixed')) {
-                $brandText.text(brand_name).css({
-                    'font-size': '12px',
-                    'font-weight': '700',
-                    'opacity': '1',
-                    'color': 'var(--primary-color)'
-                });
-                $brandText.data('lserp-fixed', true);
+                $brandText.text(brand_name).data('lserp-fixed', true);
             }
         }
-    }
-
-    // 2. Remove previously injected separate brand header block if any
-    if ($('.lserp-sidebar-brand').length > 0) {
-        $('.lserp-sidebar-brand').remove();
     }
 };
 

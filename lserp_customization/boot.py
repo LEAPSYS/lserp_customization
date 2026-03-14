@@ -1,4 +1,5 @@
 import frappe
+from lserp_customization import __version__
 
 
 def extend_bootinfo(bootinfo):
@@ -24,6 +25,7 @@ def extend_bootinfo(bootinfo):
             "background_color":        theme.background_color or "",
             "font_family":             theme.font_family or "Inter",
             "enable_modern_dashboard": bool(theme.enable_modern_dashboard),
+            "app_version":             __version__,
         }
     except Exception as exc:
         frappe.log_error(f"boot.py error: {exc}", "LSERP Boot")
