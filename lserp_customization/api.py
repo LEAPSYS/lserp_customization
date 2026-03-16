@@ -51,226 +51,65 @@ def get_theme_css():
         font_import = f"@import url('https://fonts.googleapis.com/css2?family={font_url}&display=swap');"
         font_stack  = f"'{font}', sans-serif"
 
-    if density == "Compact":
-        # USE THE USER-PROVIDED EXACT SAP FIORI PAYLOAD
-        css = f"""
-/* =====================================================
-   ERPNext SAP Fiori Style Theme (User Provided Payload)
-   ===================================================== */
+    # ── Token Generation Logic (Premium World-Class Aesthetic) ───────────────────
+    
+    # Border radius tokens (Sleek, rounded modern look)
+    if density == "Comfortable" and modern:
+        r, r_sm, r_lg = "12px", "8px", "16px"
+    elif density == "Comfortable":
+        r, r_sm, r_lg = "8px", "6px", "12px"
+    elif density == "Compact":
+        r, r_sm, r_lg = "6px", "4px", "8px"
+    else: # Ultra Compact
+        r, r_sm, r_lg = "4px", "2px", "4px"
 
-:root {{
-  --sapPrimary: {p};
-  --sapPrimaryHover: {s};
-  --sapBackground: #f5f6f7;
-  --sapPanel: #ffffff;
-  --sapBorder: #d9d9d9;
-  --sapText: #32363a;
-  --sapFont: {font_stack};
-  --sapSuccess: #107e3e;
-  --sapWarning: #e9730c;
-  --sapError: #bb0000;
-  
-  /* Frappe Variable Overrides to match SAP */
-  --primary: var(--sapPrimary);
-  --btn-primary: var(--sapPrimary);
-  --text-color: var(--sapText);
-  --navbar-bg: #ffffff;
-  --bg-color: var(--sapBackground);
-  --control-bg: #fff;
-  --border-color: var(--sapBorder);
-  --dark-border-color: var(--sapBorder);
-  --table-border-color: var(--sapBorder);
-}}
-
-/* ---------- GLOBAL ---------- */
-body {{
-  font-family: var(--sapFont) !important;
-  background: var(--sapBackground) !important;
-  color: var(--sapText) !important;
-  font-size: 13px !important;
-}}
-
-.page-container {{ background: var(--sapBackground) !important; }}
-.layout-main-section {{ background: transparent !important; }}
-
-/* ---------- NAVBAR ---------- */
-.navbar, .desk-navbar {{
-  background: white !important;
-  border-bottom: 1px solid var(--sapBorder) !important;
-  height: 48px !important;
-  box-shadow: none !important;
-}}
-.navbar .navbar-brand {{ font-weight: 600; font-size: 16px; color: var(--sapText) !important; }}
-.navbar .nav-link, .navbar * {{ color: var(--sapText) !important; }}
-
-/* ---------- SIDEBAR ---------- */
-.layout-side-section, .desk-sidebar {{
-  background: white !important;
-  border-right: 1px solid var(--sapBorder) !important;
-}}
-.sidebar-item, .standard-sidebar-item {{
-  padding: 8px 12px !important;
-  border-radius: 4px !important;
-  color: var(--sapText) !important;
-}}
-.sidebar-item:hover, .standard-sidebar-item:hover {{ background: #f0f6ff !important; }}
-.sidebar-item.active, .standard-sidebar-item.selected {{ background: #f0f6ff !important; font-weight: 600 !important; }}
-
-/* ---------- BUTTONS ---------- */
-.btn-primary {{
-  background: var(--sapPrimary) !important;
-  border-color: var(--sapPrimary) !important;
-  border-radius: 4px !important;
-  color: #fff !important;
-  box-shadow: none !important;
-}}
-.btn-primary:hover {{ background: var(--sapPrimaryHover) !important; }}
-.btn-default, .btn-secondary {{
-  background: white !important;
-  border: 1px solid var(--sapBorder) !important;
-  border-radius: 4px !important;
-}}
-
-/* ---------- INPUT FIELDS ---------- */
-.form-control, .awesomplete input {{
-  border: 1px solid var(--sapBorder) !important;
-  border-radius: 4px !important;
-  background: #fff !important;
-}}
-.form-control:focus {{
-  border-color: var(--sapPrimary) !important;
-  box-shadow: none !important;
-}}
-
-/* ---------- FORM SECTIONS ---------- */
-.form-section, .frappe-doc-section {{
-  background: var(--sapPanel) !important;
-  border: 1px solid var(--sapBorder) !important;
-  border-radius: 6px !important;
-  padding: 16px !important;
-  box-shadow: none !important;
-  margin-bottom: 8px !important;
-}}
-.section-head, .form-section-heading {{
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  border-bottom: none !important;
-  color: var(--sapText) !important;
-}}
-.control-label {{
-  font-weight: 500 !important;
-  color: #6a6d70 !important;
-}}
-
-/* ---------- TABLES ---------- */
-.grid-body {{ background: white !important; }}
-.grid-heading-row, .dt-header-row th {{
-  background: #fafafa !important;
-  border-bottom: 1px solid var(--sapBorder) !important;
-  color: var(--sapText) !important;
-}}
-.grid-row:hover, .dt-row:hover .dt-cell {{ background: #f0f6ff !important; }}
-.dt-cell {{ border-color: var(--sapBorder) !important; }}
-
-/* ---------- LIST VIEW ---------- */
-.list-row {{
-  border-bottom: 1px solid var(--sapBorder) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}}
-.list-row:hover {{ background: #f0f6ff !important; }}
-.list-row-head {{ background: #fafafa !important; border-bottom: 1px solid var(--sapBorder) !important; }}
-
-/* ---------- DASHBOARD WIDGET ---------- */
-.widget, .shortcut-widget-box, .frappe-card {{
-  background: white !important;
-  border: 1px solid var(--sapBorder) !important;
-  border-radius: 6px !important;
-  box-shadow: none !important;
-}}
-.widget-head, .widget-title {{ font-weight: 600 !important; color: var(--sapText) !important; }}
-
-/* ---------- DIALOG WINDOWS ---------- */
-.modal-content {{
-  border-radius: 6px !important;
-  border: 1px solid var(--sapBorder) !important;
-}}
-.modal-header {{
-  background: #fff !important;
-  border-bottom: 1px solid var(--sapBorder) !important;
-  color: var(--sapText) !important;
-}}
-.modal-title {{ color: var(--sapText) !important; }}
-.modal-header .btn-close {{ filter: none !important; color: #6a6d70 !important; }}
-
-/* ---------- STATUS COLORS ---------- */
-.indicator.green, .indicator-pill.green {{ background: var(--sapSuccess) !important; color: #fff !important; }}
-.indicator.orange, .indicator-pill.orange {{ background: var(--sapWarning) !important; color: #fff !important; }}
-.indicator.red, .indicator-pill.red {{ background: var(--sapError) !important; color: #fff !important; }}
-
-/* ---------- WORKSPACE ICONS ---------- */
-.workspace-icon {{ background: #f4f5f7 !important; border-radius: 6px !important; }}
-
-/* ---------- REPORT TABLE ---------- */
-.report-wrapper table {{ border: 1px solid var(--sapBorder) !important; }}
-.report-wrapper th {{ background: #fafafa !important; }}
-
-/* ---------- TAB SECTION ---------- */
-.form-tabs {{ border-bottom: 1px solid var(--sapBorder) !important; }}
-.form-tabs .nav-link.active {{ border-bottom: 2px solid var(--sapPrimary) !important; color: var(--sapPrimary) !important; }}
-
-/* ---------- DROPDOWN ---------- */
-.dropdown-menu {{ border: 1px solid var(--sapBorder) !important; border-radius: 4px !important; }}
-
-/* ---------- SCROLLBAR ---------- */
-::-webkit-scrollbar {{ width: 8px !important; }}
-::-webkit-scrollbar-thumb {{ background: #c7c7c7 !important; border-radius: 4px !important; }}
-"""
-    else:
-        # ── ORIGINAL / STANDARD OUTPUT BUILDER FOR NON-COMPACT ───────────────────
+    # Spacing & sizing tokens
+    if density == "Ultra Compact":
+        row_h   = "24px"
+        inp_h   = "20px"
+        pad_f   = "3px 6px"     
+        pad_c   = "2px 4px"     
+        fsize   = "12px"
+        label_s = "10px"
+        sec_pad = "6px 10px"
+    elif density == "Compact":
+        row_h   = "32px"
+        inp_h   = "28px"
+        pad_f   = "8px 12px"
+        pad_c   = "4px 8px"
+        fsize   = "13px"
+        label_s = "11px"
+        sec_pad = "12px 14px"
+    else:  # Comfortable
+        row_h   = "44px"
+        inp_h   = "36px"
+        pad_f   = "14px 16px"
+        pad_c   = "8px 12px"
+        fsize   = "14px"
+        label_s = "12px"
+        sec_pad = "16px 20px"
         
-        # ── Border radius tokens ───────────────────────────────────────────────────
-        if density == "Comfortable" and modern:
-            r, r_sm, r_lg = "12px", "8px", "16px"
-        elif density == "Comfortable":
-            r, r_sm, r_lg = "6px", "4px", "8px"
-        else:
-            r, r_sm, r_lg = "4px", "2px", "4px"
+    # Premium Navbar Tokens
+    if navbar_style == "Gradient":
+        navbar_bg     = f"linear-gradient(135deg, {s} 0%, {p} 100%)"
+        navbar_txt    = "rgba(255,255,255,0.95)"
+        navbar_shadow = "0 4px 20px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1)"
+        navbar_border = "none"
+    elif navbar_style == "Flat":
+        navbar_bg     = p
+        navbar_txt    = "#fff"
+        navbar_shadow = f"0 2px 10px {p}33, 0 1px 2px rgba(0,0,0,0.06)"
+        navbar_border = "none"
+    else:  # Minimal (Stripe/Linear style white header)
+        navbar_bg     = "rgba(255, 255, 255, 0.95)"
+        navbar_txt    = "#111827"
+        navbar_shadow = "0 1px 2px rgba(0,0,0,0.04)"
+        navbar_border = f"1px solid #e5e7eb"
+        
+    # Base Box Shadow for cards (very soft, multi-layered)
+    card_shadow = "0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03)" if not modern else "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)"
 
-        if density == "Ultra Compact":
-            row_h   = "24px"
-            inp_h   = "20px"
-            pad_f   = "3px 6px"     
-            pad_c   = "2px 4px"     
-            fsize   = "12px"
-            label_s = "10px"
-            sec_pad = "6px 10px"
-        else:  # Comfortable
-            row_h   = "44px"
-            inp_h   = "28px"
-            pad_f   = "14px 16px"
-            pad_c   = "5px 10px"
-            fsize   = "14px"
-            label_s = "12px"
-            sec_pad = "14px 18px"
-            
-        if navbar_style == "Gradient":
-            navbar_bg  = f"linear-gradient(135deg, {s} 0%, {p} 100%)"
-            navbar_txt = "rgba(255,255,255,0.92)"
-            navbar_shadow = "0 2px 10px rgba(0,0,0,0.18)"
-            navbar_border = "none"
-        elif navbar_style == "Flat":
-            navbar_bg  = p
-            navbar_txt = "#fff"
-            navbar_shadow = f"0 1px 4px {p}44"
-            navbar_border = "none"
-        else:  # Minimal
-            navbar_bg  = "#ffffff"
-            navbar_txt = "#1a1f36"
-            navbar_shadow = "none"
-            navbar_border = f"1px solid #e2e6ea"
-
-        css = f"""
+    css = f"""
 /* ================================================================
    LSERP Theme: {theme.theme_name}  |  Density: {density}  |  Navbar: {navbar_style}
    ================================================================ */
